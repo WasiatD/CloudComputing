@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pydantic
+firebase-admin
+numpy
+tensorflow
+pillow
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+google-cloud-firestore
+google-generativeai
