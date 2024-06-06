@@ -1,61 +1,65 @@
-import numpy as np
 import tensorflow as tf
+from PIL import Image
+import numpy as np
 import google.generativeai as genai
 import base64
-import io
-from PIL import Image
 import os
+from io import BytesIO
+from PIL import Image
 import firebase_admin
 from firebase_admin import credentials, firestore
+import time
 from config import GENAI_API_KEY
 
-class PlantDiseaseModel:
-    def __init__(self, model_path: str, firestore_db):
-        self.model_path = model_path
-        self.class_names = [
-            "Pepper_bell_Bacterial_spot", "Pepper_bell_healthy",
-            "Tomato_Bacterial_spot", "Tomato_Early_blight", "Tomato_Late_blight",
-            "Tomato_Leaf_Mold", "Tomato_Septoria_leaf_spot",
-            "Tomato_Spider_mites_Two_spotted_spider_mite", "Tomato_Target_Spot",
-            "Tomato_YellowLeaf_Curl_Virus", "Tomato_Tomato_mosaic_virus",
-            "Tomato_healthy"
-        ]
-        self.interpreter = tf.lite.Interpreter(model_path=self.model_path)
-        self.interpreter.allocate_tensors()
-        self.save_dir = "saved_images"
-        os.makedirs(self.save_dir, exist_ok=True)
+class plant_disease_model:
+    def __init__(self, model_path, firestore_db):
+        self.loaded_model = tf.saved_model.load(model_path)
         self.db = firestore_db
 
-    def predict_image_from_base64(self, base64_str: str) -> str:
-        # Decode the base64 string to bytes
-        image_data = base64.b64decode(base64_str)
+
+    def predict_tf(self, base64_str, save_dir='saved_images'):
+        class_names = [
+            "Pepper__bell___Bacterial_spot", "Pepper__bell___healthy",
+            "Strawberry___Leaf_scorch", "Strawberry___healthy",
+            "Tomato_Bacterial_spot", "Tomato_Early_blight", "Tomato_Late_blight",
+            "Tomato_Leaf_Mold", "Tomato_Septoria_leaf_spot",
+            "Tomato_Spider_mites_Two_spotted_spider_mite", "Tomato__Target_Spot",
+            "Tomato__Tomato_YellowLeaf__Curl_Virus", "Tomato__Tomato_mosaic_virus",
+            "Tomato_healthy"
+        ]
+
+        # Decode the base64 string to get image data
+        img_data = base64.b64decode(base64_str)
+        img = Image.open(BytesIO(img_data))
+
+        # Preprocess the image
+        img_resize = img.resize((299, 299))  # Resize the image to match model input size
+        img_array = np.array(img_resize)  # Convert image to numpy array
+        img_array = img_array.astype(np.float32) / 255.0  # Normalize pixel values and convert to float32
+
+        # Predict the class of the image using the loaded_model directly
+        prediction = self.loaded_model(np.expand_dims(img_array, axis=0))
+
+        # Get the predicted class index
+        predicted_class_index = np.argmax(prediction)
         
-        # Convert bytes to a PIL Image
-        image = Image.open(io.BytesIO(image_data))
-        
-        # Save the image to the server
-        image_path = os.path.join(self.save_dir, "uploaded_image.jpg")
-        image.save(image_path)
+        # Get the predicted class name
+        predicted_class_name = class_names[predicted_class_index]
 
-        # Resize the image to match the expected dimensions
-        image = image.resize((299, 299))
-        
-        # Perform prediction as before
-        input_arr = tf.keras.preprocessing.image.img_to_array(image)
-        input_arr = np.expand_dims(input_arr, axis=0)
-        input_arr = input_arr / 255.0  # Normalize the input image
+        ###### SIMPAN DECODED BASE64 IMAGE
+        # Ensure the save directory exists
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
 
-        input_index = self.interpreter.get_input_details()[0]['index']
-        self.interpreter.set_tensor(input_index, input_arr)
-        self.interpreter.invoke()
+        # Generate a unique filename using the predicted class name and a timestamp
+        timestamp = int(time.time())
+        image_name = f"{predicted_class_name}_{timestamp}.jpg"
+        save_path = os.path.join(save_dir, image_name)
 
-        output_index = self.interpreter.get_output_details()[0]['index']
-        output = self.interpreter.get_tensor(output_index)
-        predicted_class_index = np.argmax(output)
-        predicted_class_name = self.class_names[predicted_class_index]
-
+        # Save the image to the specified directory
+        img.save(save_path)
         try:
-            doc_ref = self.db.collection('predictions').add({
+            doc_ref = self.db.collection('user').document('user').collection('prediction').add({
                 'image': base64_str,
                 'predicted_class': predicted_class_name
             })
@@ -65,12 +69,20 @@ class PlantDiseaseModel:
 
         return predicted_class_name
 
-def prompt_disease(disease: str) -> str:
-    genai.configure(api_key=GENAI_API_KEY)
-    model = genai.GenerativeModel('gemini-pro')
-    prompt = f"Jelaskan Penyakit {disease}: Pengertian, Penyebab, dan Cara Penanganan singkat dalam 3 paragraf."
-    response = model.generate_content(prompt)
-    return response.text
+    def prompt_disease(self, disease):
+        genai.configure(api_key=GENAI_API_KEY)
+        model = genai.GenerativeModel('gemini-pro')
+        prompt = f"Jelaskan Penyakit {disease}: Pengertian, Penyebab, dan Cara Penanganan singkat dalam 3 paragraf."
+        response = model.generate_content(prompt)
+        return response.text
+
+    def main_tf(self, image_path):
+        # Load the image and predict the class
+        predicted_class_name = self.predict_tf(image_path)
+
+        # Print the predicted class name
+        print(self.prompt_disease(predicted_class_name))
+
 
 service_account_key_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', './belajar-firestore-7ddb4-firebase-adminsdk-jr4kg-1cb628449b.json')
 cred = credentials.Certificate(service_account_key_path)
