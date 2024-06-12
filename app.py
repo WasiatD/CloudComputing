@@ -1,19 +1,28 @@
-# app.py
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, FastAPI
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from model import plant_disease_model
+from auth import login_user, register_user, validate_token, get_current_user_id
+from handler import add_prediction, get_predictions, getListIot, add_data
+import base64   
 import model
 import tempfile
 import shutil
 import os
-import base64   
+import jwt
 from datetime import datetime
+
 
 app = FastAPI()
 
 # Initialize the model with the path to the TFLite model file
 model_path = "model_fix2"  # Replace with your model path
-model = plant_disease_model(model_path=model_path,firestore_db=model.db)
+model = plant_disease_model(model_path=model_path)
+class ImageData(BaseModel):
+    base64_encoded: str
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @app.get("/")
 def read_root():
@@ -24,74 +33,92 @@ def read_root():
 async def add_data_iot(data: dict):
     try:
         timestamp = str(datetime.now().timestamp())
-        doc_ref = model.db.collection('user').document('user').collection('IOT').document('iot1').collection('data').document(timestamp).set(data)
+        user = data['user']
+        add_data(user, data['id'], data, timestamp)
         return JSONResponse(content={"message": "Data added successfully"})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
-@app.post("/predict")
-async def predict_plant_disease(base64_encoded: str):
+@app.post("/register")
+async def register(email: str, password: str):
     try:
-        # Make a prediction using the base64 encoded image data
+        user = register_user(email, password)
+        return JSONResponse(content={"user": user})
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/login")
+async def login(email: str, password: str):
+    try:
+        token = login_user(email, password)
+        return token
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# Predict plant disease
+@app.post("/predict")
+async def predict_plant_disease(image_data: ImageData, token: str = Depends(oauth2_scheme)):
+    try:
+        # Validate the token
+        validate_token(token)
+        base64_encoded = image_data.base64_encoded
         predicted_class = model.predict_tf(base64_encoded)
-        
+        user = get_current_user_id(token)
+        add_prediction(user,base64_encoded, predicted_class)
+
         return JSONResponse(content={"predicted_class": predicted_class})
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
+# get disease info
 @app.get("/disease-info/{disease}")
-def get_disease_info(disease: str):
+def get_disease_info(disease: str, token: str = Depends(oauth2_scheme)):
     try:
+        validate_token(token)
         info = model.prompt_disease(disease)
         return JSONResponse(content={"disease_info": info})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
+# get List predictions
 @app.get("/get_predictions")
-def get_predictions():
-    predictions = []
-    docs = model.db.collection('user').document('user').collection('prediction').stream()
-    for doc in docs:
-        predictions.append(doc.to_dict())
-    return {"predictions": predictions}
-
-# get predictions by id 
-@app.get("/get_predictions/{id}")
-def get_prediction_by_id(id: str):
-    doc = model.db.collection('user').document('user').collection('prediction').document(id).get()
-    return doc.to_dict()
-
-@app.get("/getListIot")
-def get_list_iot():
+def getpredictions(token: str = Depends(oauth2_scheme)):
     try:
-        collection_ref = model.db.collection('user').document('user').collection('IOT')
-        docs = collection_ref.stream()
-        isi = []
-        for doc in docs:
-            doc_data = doc.to_dict()
-            doc_data['id'] = doc.id
-            isi.append(doc_data)
+        validate_token(token)
+        user = get_current_user_id(token)
+        print (user)
+        predictions = get_predictions(user)
+        return JSONResponse(content={"predictions": predictions})
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
+# # get predictions by id 
+# @app.get("/get_predictions/{id}")
+# def get_prediction_by_id(id: str):
+#     doc = model.db.collection('predictions').document(id).get()
+#     return doc.to_dict()
+
+# get list IOT
+@app.get("/getListIot")
+def get_list_iot(token: str = Depends(oauth2_scheme)):
+    try:
+        validate_token(token)
+        user = get_current_user_id(token)
+        isi = getListIot(user)
         return JSONResponse(content={"isi": isi})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
+# get data by id IOT
 @app.get("/getDataById/{id}")
-def get_data_by_id(id: str):
+def get_data_by_id(id: str, token: str = Depends(oauth2_scheme)):
     try:
-        doc = model.db.collection('user').document('user').collection('IOT').document(id).collection('data')
-        docs = doc.stream()
-        isi = []
-        for doc in docs:
-            doc_data = doc.to_dict()
-            doc_data['id'] = doc.id
-            isi.append(doc_data)
-
+        validate_token(token)
+        user = get_current_user_id(token)
+        isi = get_data_by_id(user, id)
         return JSONResponse(content={"isi": isi})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -101,5 +128,3 @@ def get_data_by_id(id: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="localhost", port=8000)
-
-# http://localhost:8000/docs

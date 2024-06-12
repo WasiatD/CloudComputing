@@ -6,15 +6,12 @@ import base64
 import os
 from io import BytesIO
 from PIL import Image
-import firebase_admin
-from firebase_admin import credentials, firestore
 import time
 from config import GENAI_API_KEY
 
 class plant_disease_model:
-    def __init__(self, model_path, firestore_db):
+    def __init__(self, model_path):
         self.loaded_model = tf.saved_model.load(model_path)
-        self.db = firestore_db
 
 
     def predict_tf(self, base64_str, save_dir='saved_images'):
@@ -58,15 +55,6 @@ class plant_disease_model:
 
         # Save the image to the specified directory
         img.save(save_path)
-        try:
-            doc_ref = self.db.collection('user').document('user').collection('prediction').add({
-                'image': base64_str,
-                'predicted_class': predicted_class_name
-            })
-            print(f'Document added with ID: {doc_ref[1].id}')
-        except Exception as e:
-            print(f'Error adding document to Firestore: {e}')
-
         return predicted_class_name
 
     def prompt_disease(self, disease):
@@ -82,9 +70,3 @@ class plant_disease_model:
 
         # Print the predicted class name
         print(self.prompt_disease(predicted_class_name))
-
-
-service_account_key_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', './belajar-firestore-7ddb4-firebase-adminsdk-jr4kg-1cb628449b.json')
-cred = credentials.Certificate(service_account_key_path)
-firebase_admin.initialize_app(cred)
-db = firestore.client()
