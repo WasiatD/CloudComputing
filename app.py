@@ -45,7 +45,7 @@ async def register(data:dict):
         email = data['email']
         password = data['password']
         user = register_user(email, password)
-        return JSONResponse(content={"user": user})
+        return user
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
