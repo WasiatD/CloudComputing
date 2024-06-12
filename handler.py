@@ -41,9 +41,9 @@ def getListIot(user):
     except Exception as e:
         raise e
 
-def get_data_by_id(user, id):
+def get_dataById(user, id):
     try:
-        doc = db.collection('user').document('user').collection('IOT').document(id).collection('data')
+        doc = db.collection('user').document(user).collection('IOT').document(id).collection('data')
         docs = doc.stream()
         isi = []
         for doc in docs:
@@ -54,3 +54,4 @@ def get_data_by_id(user, id):
         return isi
     except Exception as e:
         raise e
+

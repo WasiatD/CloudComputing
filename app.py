@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from model import plant_disease_model
 from auth import login_user, register_user, validate_token, get_current_user_id
-from handler import add_prediction, get_predictions, getListIot, add_data
+from handler import add_prediction, get_predictions, getListIot, add_data,get_dataById
 import base64   
 import model
 import tempfile
@@ -40,16 +40,20 @@ async def add_data_iot(data: dict):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/register")
-async def register(email: str, password: str):
+async def register(data:dict):
     try:
+        email = data['email']
+        password = data['password']
         user = register_user(email, password)
         return JSONResponse(content={"user": user})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/login")
-async def login(email: str, password: str):
+async def login(data:dict):
     try:
+        email = data['email']
+        password = data['password']
         token = login_user(email, password)
         return token
     except Exception as e:
@@ -118,7 +122,7 @@ def get_data_by_id(id: str, token: str = Depends(oauth2_scheme)):
     try:
         validate_token(token)
         user = get_current_user_id(token)
-        isi = get_data_by_id(user, id)
+        isi = get_dataById(user, id)
         return JSONResponse(content={"isi": isi})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

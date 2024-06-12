@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "fba69c07-cc83-45a8-a968-4edb8e10ad07",
+		"name": "WasiatD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30684465"
+	},
+	"item": [
+		{
+			"name": "ListIOT",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "DataAtIOT",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "ListPredictionUser",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "DiseaseInfo",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjMzMDUxMThiZTBmNTZkYzA4NGE0NmExN2RiNzU1NjVkNzY4YmE2ZmUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmVsYWphci1maXJlc3RvcmUtN2RkYjQiLCJhdWQiOiJiZWxhamFyLWZpcmVzdG9yZS03ZGRiNCIsImF1dGhfdGltZSI6MTcxODE3Mzk1NiwidXNlcl9pZCI6InpSTkFqSEpPbTNNSUZQRjdwSzZZR2lLWEJvNzIiLCJzdWIiOiJ6Uk5BakhKT20zTUlGUEY3cEs2WUdpS1hCbzcyIiwiaWF0IjoxNzE4MTczOTU2LCJleHAiOjE3MTgxNzc1NTYsImVtYWlsIjoic3VrcmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInN1a3JhQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.Su9rsCnB6ll197GKkDO5s1_MAnt6kzVbNXCLu2eDsV-vKVWBNW2q9qrRonhsIg-tZRs6OoOfhLMDBr5FZ4-fjIF9AQATzm_r8o8u7Z5bS7vK5y25Ip1WEiR9zrSsc9C8nU6jwlugv843JR60Hl9dbGbbjMtSzbmmcIw0rRHWsy7uom3Dl4C-444FktIwyo_3cEd9RX90IuZVo6ZQDxtY8G-H3ZNE1suR9RQgkM1e4AHWlx18YOHhqVQE3WgeagkWcW3eB2gpKExOGITB359Sy_EgEYAsSzPvHmpi72Fy-xUI_4dDwVU_M4C6JRcMo5PBSYRjTBdtTm2AEAFRMS3_5w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"zRNAjHJOm3MIFPF7pK6YGiKXBo72\",\r\n    \"id\":\"iot1\",\r\n    \"suhu\":\"78\",\r\n    \"ph\":\"5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8000/addDataIOT",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"addDataIOT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjMzMDUxMThiZTBmNTZkYzA4NGE0NmExN2RiNzU1NjVkNzY4YmE2ZmUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmVsYWphci1maXJlc3RvcmUtN2RkYjQiLCJhdWQiOiJiZWxhamFyLWZpcmVzdG9yZS03ZGRiNCIsImF1dGhfdGltZSI6MTcxODE3Mzk1NiwidXNlcl9pZCI6InpSTkFqSEpPbTNNSUZQRjdwSzZZR2lLWEJvNzIiLCJzdWIiOiJ6Uk5BakhKT20zTUlGUEY3cEs2WUdpS1hCbzcyIiwiaWF0IjoxNzE4MTczOTU2LCJleHAiOjE3MTgxNzc1NTYsImVtYWlsIjoic3VrcmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInN1a3JhQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.Su9rsCnB6ll197GKkDO5s1_MAnt6kzVbNXCLu2eDsV-vKVWBNW2q9qrRonhsIg-tZRs6OoOfhLMDBr5FZ4-fjIF9AQATzm_r8o8u7Z5bS7vK5y25Ip1WEiR9zrSsc9C8nU6jwlugv843JR60Hl9dbGbbjMtSzbmmcIw0rRHWsy7uom3Dl4C-444FktIwyo_3cEd9RX90IuZVo6ZQDxtY8G-H3ZNE1suR9RQgkM1e4AHWlx18YOHhqVQE3WgeagkWcW3eB2gpKExOGITB359Sy_EgEYAsSzPvHmpi72Fy-xUI_4dDwVU_M4C6JRcMo5PBSYRjTBdtTm2AEAFRMS3_5w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"zRNAjHJOm3MIFPF7pK6YGiKXBo72\",\r\n    \"id\":\"iot1\",\r\n    \"suhu\":\"78\",\r\n    \"ph\":\"5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8000/addDataIOT",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"addDataIOT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPrediction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjMzMDUxMThiZTBmNTZkYzA4NGE0NmExN2RiNzU1NjVkNzY4YmE2ZmUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmVsYWphci1maXJlc3RvcmUtN2RkYjQiLCJhdWQiOiJiZWxhamFyLWZpcmVzdG9yZS03ZGRiNCIsImF1dGhfdGltZSI6MTcxODE3Mzk1NiwidXNlcl9pZCI6InpSTkFqSEpPbTNNSUZQRjdwSzZZR2lLWEJvNzIiLCJzdWIiOiJ6Uk5BakhKT20zTUlGUEY3cEs2WUdpS1hCbzcyIiwiaWF0IjoxNzE4MTczOTU2LCJleHAiOjE3MTgxNzc1NTYsImVtYWlsIjoic3VrcmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInN1a3JhQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.Su9rsCnB6ll197GKkDO5s1_MAnt6kzVbNXCLu2eDsV-vKVWBNW2q9qrRonhsIg-tZRs6OoOfhLMDBr5FZ4-fjIF9AQATzm_r8o8u7Z5bS7vK5y25Ip1WEiR9zrSsc9C8nU6jwlugv843JR60Hl9dbGbbjMtSzbmmcIw0rRHWsy7uom3Dl4C-444FktIwyo_3cEd9RX90IuZVo6ZQDxtY8G-H3ZNE1suR9RQgkM1e4AHWlx18YOHhqVQE3WgeagkWcW3eB2gpKExOGITB359Sy_EgEYAsSzPvHmpi72Fy-xUI_4dDwVU_M4C6JRcMo5PBSYRjTBdtTm2AEAFRMS3_5w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"zRNAjHJOm3MIFPF7pK6YGiKXBo72\",\r\n    \"id\":\"iot1\",\r\n    \"suhu\":\"78\",\r\n    \"ph\":\"5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8000/addDataIOT",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"addDataIOT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addData",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjMzMDUxMThiZTBmNTZkYzA4NGE0NmExN2RiNzU1NjVkNzY4YmE2ZmUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmVsYWphci1maXJlc3RvcmUtN2RkYjQiLCJhdWQiOiJiZWxhamFyLWZpcmVzdG9yZS03ZGRiNCIsImF1dGhfdGltZSI6MTcxODE3Mzk1NiwidXNlcl9pZCI6InpSTkFqSEpPbTNNSUZQRjdwSzZZR2lLWEJvNzIiLCJzdWIiOiJ6Uk5BakhKT20zTUlGUEY3cEs2WUdpS1hCbzcyIiwiaWF0IjoxNzE4MTczOTU2LCJleHAiOjE3MTgxNzc1NTYsImVtYWlsIjoic3VrcmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInN1a3JhQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.Su9rsCnB6ll197GKkDO5s1_MAnt6kzVbNXCLu2eDsV-vKVWBNW2q9qrRonhsIg-tZRs6OoOfhLMDBr5FZ4-fjIF9AQATzm_r8o8u7Z5bS7vK5y25Ip1WEiR9zrSsc9C8nU6jwlugv843JR60Hl9dbGbbjMtSzbmmcIw0rRHWsy7uom3Dl4C-444FktIwyo_3cEd9RX90IuZVo6ZQDxtY8G-H3ZNE1suR9RQgkM1e4AHWlx18YOHhqVQE3WgeagkWcW3eB2gpKExOGITB359Sy_EgEYAsSzPvHmpi72Fy-xUI_4dDwVU_M4C6JRcMo5PBSYRjTBdtTm2AEAFRMS3_5w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\":\"zRNAjHJOm3MIFPF7pK6YGiKXBo72\",\r\n    \"id\":\"iot1\",\r\n    \"suhu\":\"78\",\r\n    \"ph\":\"5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8000/addDataIOT",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"addDataIOT"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

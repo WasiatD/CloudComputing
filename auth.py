@@ -34,3 +34,11 @@ def get_current_user_id(token):
         return uid
     except Exception as e:
         raise e
+
+def get_current_user_by_email(email):
+    try:
+        user = auth.get_user_by_email(email)
+        uid = user.uid
+        return uid
+    except Exception as e:
+        return e
