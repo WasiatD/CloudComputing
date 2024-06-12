@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, FastAPI
+from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, FastAPI, Form
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -40,10 +40,8 @@ async def add_data_iot(data: dict):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/register")
-async def register(data:dict):
+async def register(email: str = Form(...), password: str = Form(...)):
     try:
-        email = data['email']
-        password = data['password']
         user = register_user(email, password)
         return user
     except Exception as e:
