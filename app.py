@@ -22,7 +22,12 @@ model = plant_disease_model(model_path=model_path)
 class ImageData(BaseModel):
     base64_encoded: str
 
+class User(BaseModel):
+    email: str
+    password: str
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 @app.get("/")
 def read_root():
@@ -48,10 +53,10 @@ async def register(email: str = Form(...), password: str = Form(...)):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/login")
-async def login(data:dict):
+async def login(email: str = Form(...), password: str = Form(...)):
     try:
-        email = data['email']
-        password = data['password']
+        # email = data['email']
+        # password = data['password']
         token = login_user(email, password)
         return token
     except Exception as e:
