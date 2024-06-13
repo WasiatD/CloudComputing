@@ -39,8 +39,8 @@ def read_root():
 async def add_data_iot(data: dict):
     try:
         timestamp = str(datetime.now().timestamp())
-        user = data['user']
-        add_data(user, data['id'], data, timestamp)
+        email = data['email']
+        add_data(email, data['id'], data, timestamp)
         return JSONResponse(content={"message": "Data added successfully"})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
