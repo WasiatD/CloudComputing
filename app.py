@@ -132,7 +132,7 @@ def get_data_by_id(id: str, token: str = Depends(oauth2_scheme)):
         validate_token(token)
         user = get_current_user_id(token)
         isi = get_dataById(user, id)
-        return JSONResponse(content={"isi": isi})
+        return JSONResponse(content=isi)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

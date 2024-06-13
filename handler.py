@@ -42,15 +42,9 @@ def getListIot(user):
 
 def get_dataById(user, id):
     try:
-        doc = db.collection('user').document(user).collection('IOT').document(id).collection('data')
-        docs = doc.stream()
-        isi = []
-        for doc in docs:
-            doc_data = doc.to_dict()
-            doc_data['id'] = doc.id
-            isi.append(doc_data)
-
-        return isi
+        doc = db.collection('user').document(user).collection('IOT').document(id)
+        doc = doc.get()
+        return doc.to_dict()
     except Exception as e:
         raise e
 
