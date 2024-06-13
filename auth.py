@@ -1,5 +1,6 @@
 from firebaseconfig import pyrebaseauth,auth
 from fastapi import HTTPException
+import json
 
 
 def login_user(email, password):
@@ -16,7 +17,15 @@ def register_user(email, password):
         user = pyrebaseauth.create_user_with_email_and_password(email, password)
         return user
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        if hasattr(e, 'args') and len(e.args) > 1:
+            try:
+                error_detail = json.loads(e.args[1])
+            except json.JSONDecodeError:
+                error_detail = {"message": e.args[1]}
+        else:
+            error_detail = {"message": str(e)}
+        error_detail['flag'] = 'false'
+        raise HTTPException(status_code=400, detail=error_detail)
 
 def validate_token(token: str):
     try:

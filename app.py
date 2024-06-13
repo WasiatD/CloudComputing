@@ -11,6 +11,7 @@ import tempfile
 import shutil
 import os
 import jwt
+import json
 from datetime import datetime
 
 
@@ -49,8 +50,19 @@ async def register(email: str = Form(...), password: str = Form(...)):
     try:
         user = register_user(email, password)
         return user
+    except HTTPException as e:
+        raise e
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        error_detail = str(e)
+        if hasattr(e, 'args') and len(e.args) > 1:
+            try:
+                error_detail = json.loads(e.args[1])
+            except json.JSONDecodeError:
+                error_detail = {"message": e.args[1]}
+        else:
+            error_detail = {"message": error_detail}
+        
+        raise HTTPException(status_code=400, detail=error_detail)
 
 @app.post("/login")
 async def login(email: str = Form(...), password: str = Form(...)):
