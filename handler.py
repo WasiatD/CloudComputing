@@ -1,10 +1,9 @@
 from firebaseconfig import db
 
 
-def add_data(user, id, data,timestamp):
+def add_data(user, data):
     try:
-        db.collection('user').document(user).collection('IOT').document(id).set({'id': id})
-        db.collection('user').document(user).collection('IOT').document(id).collection('data').document(timestamp).set(data)
+        db.collection('user').document(user).collection('IOT').document(data['id']).set({'id': data['id'], 'name':data['name'], 'location':data['location'], 'suhu':data['suhu'],'ph':data['ph'], 'kelembapan':data['kelembaban']})
     except Exception as e:
         raise e
 

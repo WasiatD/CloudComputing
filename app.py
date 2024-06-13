@@ -38,9 +38,8 @@ def read_root():
 @app.post("/addDataIOT")
 async def add_data_iot(data: dict):
     try:
-        timestamp = str(datetime.now().timestamp())
-        email = data['email']
-        add_data(email, data['id'], data, timestamp)
+        user = data['user']
+        add_data(user, data )
         return JSONResponse(content={"message": "Data added successfully"})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -114,11 +113,6 @@ def getpredictions(token: str = Depends(oauth2_scheme)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# # get predictions by id 
-# @app.get("/get_predictions/{id}")
-# def get_prediction_by_id(id: str):
-#     doc = model.db.collection('predictions').document(id).get()
-#     return doc.to_dict()
 
 # get list IOT
 @app.get("/getListIot")
