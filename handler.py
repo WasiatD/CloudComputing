@@ -8,7 +8,7 @@ def add_data(user, data):
         raise e
 def update_data(user, data):
     try:
-        db.collection('user').document(user).collection('IOT').document(data['id']).set({'id': data['id'], 'name':data['name'], 'deskripsi':data['deskripsi'], 'location':data['location'], 'suhu':data['suhu'],'ph':data['ph'], 'kelembapan':data['kelembaban']})
+        db.collection('user').document(user).collection('IOT').document(data['id']).set({'id': data['id'], 'name':data['name'], 'deskripsi':data['deskripsi'], 'location':data['location'], 'suhu':data['suhu'],'ph':data['ph'], 'kelembapan':data['kelembapan']})
     except Exception as e:
         raise e
 
