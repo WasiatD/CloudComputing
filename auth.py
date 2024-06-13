@@ -15,6 +15,7 @@ def login_user(email, password):
 def register_user(email, password):
     try:
         user = pyrebaseauth.create_user_with_email_and_password(email, password)
+        user['flag'] = 'true'
         return user
     except Exception as e:
         if hasattr(e, 'args') and len(e.args) > 1:
@@ -38,8 +39,8 @@ def validate_token(token: str):
 def get_current_user_id(token):
     try:
         decoded_token = auth.verify_id_token(token)
-        uid = decoded_token['uid']
-        return uid
+        email = decoded_token['email']
+        return email
     except Exception as e:
         raise e
 

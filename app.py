@@ -38,8 +38,8 @@ def read_root():
 @app.post("/addDataIOT")
 async def add_data_iot(data: dict):
     try:
-        user = data['user']
-        add_data(user, data )
+        email = data['email']
+        add_data(email, data)
         return JSONResponse(content={"message": "Data added successfully"})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
