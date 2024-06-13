@@ -15,7 +15,7 @@ def login_user(email, password):
 def register_user(email, password):
     try:
         user = pyrebaseauth.create_user_with_email_and_password(email, password)
-        user['error'] = 'false'
+        user['flag'] = 'true'
         return user
     except Exception as e:
         if hasattr(e, 'args') and len(e.args) > 1:
