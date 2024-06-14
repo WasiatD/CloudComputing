@@ -9,12 +9,13 @@ def add_data(user, data):
         if flag is not None:
             db.collection('user').document(user).collection('IOT').document(data['id']).collection('data').document('data').set({'suhu':data['suhu'], 'ph':data['ph'], 'kelembapan':data['kelembapan']})
         else:
-            db.collection('user').document(user).collection('IOT').document(data['id']).set({'iot':data['id']})
+            db.collection('user').document(user).collection('IOT').document(data['id']).set({'nama':data['id']})
             db.collection('user').document(user).collection('IOT').document(data['id']).collection('data').document('data').set({'suhu':data['suhu'], 'ph':data['ph'], 'kelembapan':data['kelembapan']})
     except Exception as e:
         raise e
 def update_data(user, data):
     try:
+        db.collection('user').document(user).collection('IOT').document(data['id']).set({'nama':data['nama'],'lokasi':data['lokasi'],'deskripsi':data['deskripsi']})
         db.collection('user').document(user).collection('IOT').document(data['id']).set({'nama':data['nama'],'lokasi':data['lokasi'],'deskripsi':data['deskripsi']})
     except Exception as e:
         raise e
@@ -54,7 +55,7 @@ def getListIot(user):
 
 def get_dataById(user, id):
     try:
-        doc = db.collection('user').document(user).collection('IOT').document(id)
+        doc = db.collection('user').document(user).collection('IOT').document(id).collection('data').document('data')
         doc = doc.get()
         return doc.to_dict()
     except Exception as e:
