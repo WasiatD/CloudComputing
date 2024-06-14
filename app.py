@@ -53,14 +53,14 @@ async def update_data_iot(data: dict, token: str = Depends(oauth2_scheme)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/getProfileIOT/{id}")
-async def getProfileData(id:str, token: str = Depends(oauth2_scheme)):
-    try:
-        user = get_current_user_id(token)
-        data = get_profile(user, id)
-        return JSONResponse(content=data)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+# @app.get("/getProfileIOT/{id}")
+# async def getProfileData(id:str, token: str = Depends(oauth2_scheme)):
+#     try:
+#         user = get_current_user_id(token)
+#         data = get_profile(user, id)
+#         return JSONResponse(content=data)
+#     except Exception as e:
+#         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/register")
 async def register(email: str = Form(...), password: str = Form(...)):
