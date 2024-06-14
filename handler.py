@@ -53,3 +53,10 @@ def get_dataById(user, id):
     except Exception as e:
         raise e
 
+def get_profile(user,id):
+    try:
+        doc = db.collection('user').document(user).collection('IOT').document(id).collection('data').document('profile')
+        data = doc.get()
+        return data.to_dict()
+    except Exception as e:
+        raise e

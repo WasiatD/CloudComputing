@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from model import plant_disease_model
 from auth import login_user, register_user, validate_token, get_current_user_id
-from handler import add_prediction, get_predictions, getListIot, add_data,get_dataById,update_data
+from handler import add_prediction, get_predictions, getListIot, add_data,get_dataById,update_data, get_profile
 import base64   
 import model
 import tempfile
@@ -50,6 +50,15 @@ async def update_data_iot(data: dict, token: str = Depends(oauth2_scheme)):
         user = get_current_user_id(token)
         update_data(user, data )
         return JSONResponse(content={"message": "Data updated successfully"})
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/getProfileIOT/{id}")
+async def getProfileData(id:str, token: str = Depends(oauth2_scheme)):
+    try:
+        user = get_current_user_id(token)
+        data = get_profile(user, id)
+        return JSONResponse(content=data)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
