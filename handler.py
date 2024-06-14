@@ -3,12 +3,12 @@ from firebaseconfig import db
 
 def add_data(user, data):
     try:
-        db.collection('user').document(user).collection('IOT').document(data['id']).set({'id': data['id'], 'name':data['name'], 'location':data['location'], 'suhu':data['suhu'],'ph':data['ph'], 'kelembapan':data['kelembaban']})
+        db.collection('user').document(user).collection('IOT').document(data['id']).collection('data').document('data').set({'suhu':data['suhu'], 'ph':data['ph'], 'kelembapan':data['kelembapan']})
     except Exception as e:
         raise e
 def update_data(user, data):
     try:
-        db.collection('user').document(user).collection('IOT').document(data['id']).set({'id': data['id'], 'name':data['name'], 'deskripsi':data['deskripsi'], 'location':data['location'], 'suhu':data['suhu'],'ph':data['ph'], 'kelembapan':data['kelembapan']})
+        db.collection('user').document(user).collection('IOT').document(data['id']).collection('data').document('profile').set({'nama':data['nama'],'lokasi':data['lokasi'],'deskripsi':data['deskripsi']})
     except Exception as e:
         raise e
 

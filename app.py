@@ -44,12 +44,12 @@ async def add_data_iot(data: dict):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.patch("/updateDataIOT")
+@app.post("/updateDataIOT")
 async def update_data_iot(data: dict, token: str = Depends(oauth2_scheme)):
     try:
-        email = data['email']
-        update_data(email, data )
-        return JSONResponse(content={"message": "Data added successfully"})
+        user = get_current_user_id(token)
+        update_data(user, data )
+        return JSONResponse(content={"message": "Data updated successfully"})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
