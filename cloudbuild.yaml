@@ -6,6 +6,6 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: ['run', 'deploy', 'fastapi-wasiatd', '--image', 'asia-southeast2-docker.pkg.dev/cloud-engineer-project-111/capstone-repo/fastapi-wasiatd:latest', '--region', 'asia-southeast2', '--platform', 'managed', '--port', '8000', '--allow-unauthenticated', '--set-env-vars', 'GOOGLE_APPLICATION_CREDENTIALS=./belajar-firestore-7ddb4-firebase-adminsdk-jr4kg-1cb628449b.json']
-logging: CLOUD_LOGGING_ONLY
+logsBucket: gs://wasiatd-cloud-logs
 images:
   - 'asia-southeast2-docker.pkg.dev/cloud-engineer-project-111/capstone-repo/fastapi-wasiatd:latest'
