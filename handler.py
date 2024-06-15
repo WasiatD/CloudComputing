@@ -7,10 +7,10 @@ def add_data(user, data):
         flag = flag.get().to_dict()
         print(flag)
         if flag is not None:
-            db.collection('user').document(user).collection('IOT').document(data['id']).collection('data').document('data').set({'suhu':data['suhu'], 'ph':data['ph'], 'kelembapan':data['kelembapan']})
+            db.collection('user').document(user).collection('IOT').document(data['id']).collection('data').document('data').set({'suhu':data['suhu'], 'cahaya':data['cahaya'], 'kelembapan':data['kelembapan'], 'relay':data['relay']})
         else:
             db.collection('user').document(user).collection('IOT').document(data['id']).set({'nama':data['id']})
-            db.collection('user').document(user).collection('IOT').document(data['id']).collection('data').document('data').set({'suhu':data['suhu'], 'ph':data['ph'], 'kelembapan':data['kelembapan']})
+            db.collection('user').document(user).collection('IOT').document(data['id']).collection('data').document('data').set({'suhu':data['suhu'], 'cahaya':data['cahaya'], 'kelembapan':data['kelembapan'], 'relay':data['relay']})
     except Exception as e:
         raise e
 def update_data(user, data):

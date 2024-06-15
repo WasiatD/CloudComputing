@@ -158,4 +158,4 @@ def get_data_by_id(id: str, token: str = Depends(oauth2_scheme)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="localhost", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
