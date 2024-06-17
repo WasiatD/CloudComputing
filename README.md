@@ -50,4 +50,4 @@ GCP Services used:
 
 This is our project Cloud Architecture, illustrated using Visual Paradigm.
 
-![Cloud Architecture](images\Capstone-Diagram-GCP.png)
+![Cloud Architecture](images/Capstone-Diagram-GCP.png)
