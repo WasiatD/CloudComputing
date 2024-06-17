@@ -1,4 +1,6 @@
 from firebaseconfig import db
+from pydantic import BaseModel
+from typing import Optional
 
 
 def add_data(user, data):
@@ -13,12 +15,32 @@ def add_data(user, data):
             db.collection('user').document(user).collection('IOT').document(data['id']).collection('data').document('data').set({'suhu':data['suhu'], 'cahaya':data['cahaya'], 'kelembapan':data['kelembapan'], 'relay':data['relay']})
     except Exception as e:
         raise e
-def update_data(user, data):
+    
+class UpdateDataModel(BaseModel):
+    id: str
+    nama: Optional[str] = None
+    lokasi: Optional[str] = None
+    deskripsi: Optional[str] = None
+
+def update_data(user, data: UpdateDataModel):
     try:
-        db.collection('user').document(user).collection('IOT').document(data['id']).set({'nama':data['nama'],'lokasi':data['lokasi'],'deskripsi':data['deskripsi']})
-        db.collection('user').document(user).collection('IOT').document(data['id']).set({'nama':data['nama'],'lokasi':data['lokasi'],'deskripsi':data['deskripsi']})
+        doc_ref = db.collection('user').document(user).collection('IOT').document(data.id)
+
+        update_data = {}
+        if data.nama is not None:
+            update_data['nama'] = data.nama
+        if data.lokasi is not None:
+            update_data['lokasi'] = data.lokasi
+        if data.deskripsi is not None:
+            update_data['deskripsi'] = data.deskripsi
+
+        if update_data:
+            doc_ref.update(update_data)
+        else:
+            raise Exception('No data to update')
     except Exception as e:
         raise e
+  
 
 def add_prediction(user ,base64_str, predicted_class_name):
     try:
