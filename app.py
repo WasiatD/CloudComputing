@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from model import plant_disease_model
 from auth import login_user, register_user, validate_token, get_current_user_id
-from handler import add_prediction, get_predictions, getListIot, add_data,get_dataById,update_data, get_profile, UpdateDataModel
+from handler import add_prediction, get_predictions, getListIot, add_data,get_dataById,update_data, get_profile, UpdateDataModel, add_notes, get_notes, delete_notes
 import base64   
 import model
 import tempfile
@@ -53,14 +53,6 @@ async def update_data_iot(data: UpdateDataModel, token: str = Depends(oauth2_sch
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# @app.get("/getProfileIOT/{id}")
-# async def getProfileData(id:str, token: str = Depends(oauth2_scheme)):
-#     try:
-#         user = get_current_user_id(token)
-#         data = get_profile(user, id)
-#         return JSONResponse(content=data)
-#     except Exception as e:
-#         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/register")
 async def register(email: str = Form(...), password: str = Form(...)):
@@ -154,7 +146,38 @@ def get_data_by_id(id: str, token: str = Depends(oauth2_scheme)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+# post data for notes
+@app.post("/addNotes")
+def add_notes_data(data: dict, token: str = Depends(oauth2_scheme)):
+    try:
+        validate_token(token)
+        user = get_current_user_id(token)
+        add_notes(user, data)
+        return JSONResponse(content={"message": "Data added successfully"})
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
+# get notes
+@app.get("/getNotes")
+def get_notes_data(token: str = Depends(oauth2_scheme)):
+    try:
+        validate_token(token)
+        user = get_current_user_id(token)
+        notes = get_notes(user)
+        return JSONResponse(content={"notes": notes})
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+# delete notes    
+@app.delete("/deleteNotes/{id}")
+def delete_notes_data(id: str, token: str = Depends(oauth2_scheme)):
+    try:
+        validate_token(token)
+        user = get_current_user_id(token)
+        delete_notes(user, id)
+        return JSONResponse(content={"message": "Data deleted successfully"})
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,6 +1,8 @@
 from firebaseconfig import db
 from pydantic import BaseModel
 from typing import Optional
+import datetime
+import pytz
 
 
 def add_data(user, data):
@@ -88,5 +90,38 @@ def get_profile(user,id):
         doc = db.collection('user').document(user).collection('IOT').document(id).collection('data').document('profile')
         data = doc.get()
         return data.to_dict()
+    except Exception as e:
+        raise e
+    
+# add data for notes (post)
+def add_notes(user, data):
+    try:
+        utc = datetime.datetime.now(pytz.utc)
+
+        data['date'] = utc.astimezone(pytz.timezone('Asia/Jakarta')).strftime('%Y-%m-%d %H:%M:%S')
+
+        db.collection('user').document(user).collection('notes').document(data['id']).set({'title':data['title'], 'content':data['content'], 'date':data['date']})
+    except Exception as e:
+        raise e
+    
+# get notes data
+def get_notes(user):
+    try:
+        collection_ref = db.collection('user').document(user).collection('notes')
+        docs = collection_ref.stream()
+        isi = []
+        for doc in docs:
+            doc_data = doc.to_dict()
+            doc_data['id'] = doc.id
+            isi.append(doc_data)
+
+        return isi
+    except Exception as e:
+        raise e
+    
+# delete notes
+def delete_notes(user, id):
+    try:
+        db.collection('user').document(user).collection('notes').document(id).delete()
     except Exception as e:
         raise e
